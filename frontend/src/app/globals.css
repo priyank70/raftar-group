@@ -1,0 +1,422 @@
+@import "tailwindcss";
+
+/* ============================================
+   TAILWIND V4 THEME CONFIGURATION
+   ============================================ */
+@theme {
+  --color-accent: #14B8A6;
+  --color-accent-light: #2DD4BF;
+  --color-accent-dark: #0D9488;
+  --color-background: #F8FAFC;
+  --color-muted: #64748B;
+  --color-success: #16A34A;
+  --color-success-light: #22C55E;
+  --color-warning: #F59E0B;
+  --color-danger: #EF4444;
+  --color-primary-700: #334155;
+  --color-primary-800: #1E293B;
+  --color-primary-900: #0F172A;
+  
+  --font-family-sans: 'Inter', system-ui, sans-serif;
+  
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.05), 0 4px 12px rgba(0,0,0,0.08);
+  --shadow-card-hover: 0 4px 8px rgba(0,0,0,0.08), 0 12px 24px rgba(0,0,0,0.12);
+  --shadow-glass: 0 8px 32px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.1);
+  --shadow-glow: 0 0 20px rgba(20,184,166,0.3);
+  --shadow-glow-strong: 0 0 40px rgba(20,184,166,0.5);
+}
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: #F8FAFC;
+  color: #1E293B;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  /* iOS momentum scrolling */
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ============================================
+   SCROLLBAR
+   ============================================ */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 100px; }
+::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+
+/* ============================================
+   KEYFRAME ANIMATIONS
+   ============================================ */
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes scaleIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+@keyframes pulseRing {
+  0% { transform: scale(0.8); opacity: 1; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+/* ============================================
+   CARD COMPONENTS
+   ============================================ */
+.card {
+  background-color: #ffffff;
+  border-radius: 0.75rem;
+  border: 1px solid #F1F5F9;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 4px 12px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+}
+.card-hover:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.08), 0 12px 24px rgba(0,0,0,0.12);
+  transform: translateY(-2px);
+}
+.glass-card {
+  background: rgba(255,255,255,0.8);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255,255,255,0.2);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.1);
+}
+
+/* ============================================
+   BUTTON COMPONENTS
+   ============================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+  font-family: inherit;
+}
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn:active:not(:disabled) { transform: scale(0.95); }
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: #14B8A6;
+  color: #ffffff;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+.btn-primary:hover:not(:disabled) {
+  background-color: #0D9488;
+  box-shadow: 0 0 20px rgba(20,184,166,0.3);
+}
+.btn-primary:active:not(:disabled) { transform: scale(0.95); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-secondary {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  background-color: #F1F5F9; color: #374151; border-radius: 0.75rem;
+  font-weight: 600; font-size: 0.875rem; border: none; cursor: pointer;
+  transition: all 0.2s; font-family: inherit;
+}
+.btn-secondary:hover:not(:disabled) { background-color: #E2E8F0; }
+.btn-secondary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-danger {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  background-color: #EF4444; color: #ffffff; border-radius: 0.75rem;
+  font-weight: 600; font-size: 0.875rem; border: none; cursor: pointer;
+  transition: all 0.2s; font-family: inherit;
+}
+.btn-danger:hover:not(:disabled) { background-color: #DC2626; }
+.btn-danger:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-ghost {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  background-color: transparent; color: #6B7280; border-radius: 0.75rem;
+  font-weight: 600; font-size: 0.875rem; border: none; cursor: pointer;
+  transition: all 0.2s; font-family: inherit;
+}
+.btn-ghost:hover:not(:disabled) { background-color: #F9FAFB; }
+
+.btn-outline {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  background-color: transparent; color: #14B8A6; border-radius: 0.75rem;
+  font-weight: 600; font-size: 0.875rem; border: 2px solid #14B8A6; cursor: pointer;
+  transition: all 0.2s; font-family: inherit;
+}
+.btn-outline:hover:not(:disabled) { background-color: #14B8A6; color: #ffffff; }
+
+.btn-sm { padding: 0.375rem 0.75rem; font-size: 0.75rem; }
+.btn-md { padding: 0.625rem 1rem; font-size: 0.875rem; }
+.btn-lg { padding: 0.75rem 1.5rem; font-size: 1rem; }
+
+/* ============================================
+   INPUT COMPONENTS
+   ============================================ */
+.input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid #E2E8F0;
+  background-color: #ffffff;
+  color: #111827;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  display: block;
+  /* iOS Safari — remove default inner shadow */
+  -webkit-appearance: none;
+  appearance: none;
+}
+.input::placeholder { color: #9CA3AF; }
+.input:focus {
+  outline: none;
+  border-color: #14B8A6;
+  box-shadow: 0 0 0 3px rgba(20,184,166,0.15);
+}
+.input:disabled { background-color: #F9FAFB; cursor: not-allowed; }
+.input-error { border-color: #EF4444; }
+.input-error:focus { box-shadow: 0 0 0 3px rgba(239,68,68,0.15); }
+
+/* Select elements — consistent cross-browser styling */
+select.input {
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem;
+}
+
+.label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.375rem;
+}
+
+/* ============================================
+   BADGE COMPONENTS
+   ============================================ */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.badge-success { background-color: #F0FDF4; color: #16A34A; }
+.badge-warning { background-color: #FFFBEB; color: #D97706; }
+.badge-danger { background-color: #FEF2F2; color: #EF4444; }
+.badge-accent { background-color: rgba(20,184,166,0.1); color: #0D9488; }
+.badge-gray { background-color: #F3F4F6; color: #6B7280; }
+
+/* ============================================
+   STAT CARD COMPONENTS
+   ============================================ */
+.stat-card {
+  background-color: #ffffff;
+  border-radius: 0.75rem;
+  border: 1px solid #F1F5F9;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 4px 12px rgba(0,0,0,0.08);
+  padding: 1.25rem;
+  cursor: default;
+  transition: all 0.3s ease;
+}
+.stat-card:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.08), 0 12px 24px rgba(0,0,0,0.12);
+  transform: translateY(-2px);
+}
+.stat-value { font-size: 1.5rem; font-weight: 700; color: #111827; margin-top: 0.25rem; }
+.stat-label { font-size: 0.875rem; color: #64748B; font-weight: 500; }
+
+/* ============================================
+   NAVIGATION COMPONENTS
+   ============================================ */
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 1rem;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  color: #6B7280;
+  cursor: pointer;
+  text-decoration: none;
+}
+.nav-item:hover { background-color: #F9FAFB; color: #111827; }
+.nav-item-active { background-color: rgba(20,184,166,0.1); color: #14B8A6; font-weight: 600; }
+.nav-item-active:hover { background-color: rgba(20,184,166,0.15); color: #14B8A6; }
+
+/* ============================================
+   SECTION TITLES
+   ============================================ */
+.section-title { font-size: 1.25rem; font-weight: 700; color: #111827; }
+.section-subtitle { font-size: 0.875rem; color: #64748B; margin-top: 0.125rem; }
+
+/* ============================================
+   TABLE COMPONENTS
+   ============================================ */
+.table { width: 100%; font-size: 0.875rem; text-align: left; border-collapse: collapse; }
+.table th {
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  color: #9CA3AF;
+  background-color: #F9FAFB;
+  border-bottom: 1px solid #F1F5F9;
+  white-space: nowrap;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #F9FAFB;
+  color: #374151;
+}
+.table tr:last-child td { border-bottom: none; }
+.table tr:hover td { background-color: rgba(249,250,251,0.5); }
+
+/* ============================================
+   SKELETON LOADER
+   ============================================ */
+.skeleton {
+  background: linear-gradient(90deg, #F1F5F9 25%, #E2E8F0 50%, #F1F5F9 75%);
+  background-size: 2000px 100%;
+  animation: shimmer 2s linear infinite;
+  border-radius: 0.75rem;
+}
+
+/* ============================================
+   AVATAR COMPONENTS
+   ============================================ */
+.avatar {
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #14B8A6, #0D9488);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: #ffffff;
+  text-transform: uppercase;
+  overflow: hidden;
+}
+.avatar-sm { width: 2rem; height: 2rem; font-size: 0.75rem; }
+.avatar-md { width: 2.5rem; height: 2.5rem; font-size: 0.875rem; }
+.avatar-lg { width: 3.5rem; height: 3.5rem; font-size: 1.125rem; }
+.avatar-xl { width: 5rem; height: 5rem; font-size: 1.5rem; }
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+.text-gradient {
+  background: linear-gradient(to right, #14B8A6, #2DD4BF);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.bg-grid {
+  background-image:
+    linear-gradient(rgba(20, 184, 166, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(20, 184, 166, 0.05) 1px, transparent 1px);
+  background-size: 30px 30px;
+}
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+/* Scrollable areas — iOS momentum scrolling */
+.overflow-y-auto, .overflow-auto, [class*="overflow-y-auto"] {
+  -webkit-overflow-scrolling: touch;
+}
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  /* Fallback for browsers without safe-area support */
+  padding-bottom: constant(safe-area-inset-bottom, 0px);
+}
+.safe-top {
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-top: constant(safe-area-inset-top, 0px);
+}
+.divider { height: 1px; background-color: #F1F5F9; margin: 1rem 0; }
+.accent-gradient { background: linear-gradient(135deg, #14B8A6 0%, #2DD4BF 100%); }
+
+/* ============================================
+   MOBILE
+   ============================================ */
+@media (max-width: 767px) {
+  .card { border-radius: 1rem; }
+  body { font-size: 15px; }
+}
+
+/* ============================================
+   SAFE AREA — iPhone notch & home indicator
+   ============================================ */
+.has-safe-area-top {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+.has-safe-area-bottom {
+  padding-bottom: max(env(safe-area-inset-bottom, 0px), 0.75rem);
+}
+
+/* ============================================
+   MIN HEIGHT — dvh with svh/vh fallback
+   ============================================ */
+.min-h-screen {
+  min-height: 100vh; /* Fallback */
+  min-height: 100svh; /* Small viewport (stable) */
+  min-height: 100dvh; /* Dynamic viewport (keyboard-aware) */
+}
+
+/* ============================================
+   PRINT
+   ============================================ */
+@media print {
+  .no-print { display: none !important; }
+  body { background: white !important; }
+}
