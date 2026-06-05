@@ -15,6 +15,10 @@
   "author": "Raftar Group",
   "license": "ISC",
   "devDependencies": {
+    "nodemon": "^3.1.14",
+    "ts-node": "^10.9.2"
+  },
+  "dependencies": {
     "@types/bcryptjs": "^2.4.6",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
@@ -23,11 +27,7 @@
     "@types/multer": "^2.1.0",
     "@types/node": "^25.9.1",
     "@types/uuid": "^10.0.0",
-    "nodemon": "^3.1.14",
-    "ts-node": "^10.9.2",
-    "typescript": "^6.0.3"
-  },
-  "dependencies": {
+    "typescript": "^6.0.3",
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
     "date-fns": "^4.1.0",
