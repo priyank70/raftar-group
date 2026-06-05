@@ -10,11 +10,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'Raftar Group - Digital Mandal Management',
-  description: 'Premium digital mandal management system for Raftar Group members',
-  icons: {
-    icon: '/favicon.ico',
-  },
+  title: 'Raftar Group - Digital Mandal System',
+  description: 'Digital Mandal Management System for tracking installments, investments, and group finances.',
   robots: {
     index: false,
     follow: false,
