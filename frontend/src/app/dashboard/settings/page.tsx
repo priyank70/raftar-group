@@ -418,7 +418,7 @@ export default function SettingsPage() {
       <div className="text-center text-xs text-muted pb-4">
         <p className="font-semibold text-gray-700">Raftar Group</p>
         <p>Digital Mandal Management System v1.0</p>
-        <p className="mt-1">Internal use only · © 2024</p>
+        <p className="mt-1">Internal use only · © 2026</p>
       </div>
     </div>
   );

@@ -132,7 +132,7 @@ export default function LoginPage() {
 
         {/* Bottom text */}
         <p className="relative z-10 text-slate-600 text-xs">
-          © 2024 Raftar Group. Internal use only.
+          © 2026 Raftar Group. Internal use only.
         </p>
       </div>
 
@@ -241,19 +241,6 @@ export default function LoginPage() {
               )}
             </motion.button>
           </form>
-
-          {/* Demo credentials */}
-          <div className="mt-8 p-4 bg-accent/5 rounded-xl border border-accent/20">
-            <p className="text-xs font-semibold text-accent mb-2">Demo Credentials</p>
-            <div className="space-y-1.5">
-              <p className="text-xs text-muted">
-                <span className="font-medium text-gray-700">Admin:</span> admin@raftar.com / Admin@123
-              </p>
-              <p className="text-xs text-muted">
-                <span className="font-medium text-gray-700">Member:</span> rahul@raftar.com / Member@123
-              </p>
-            </div>
-          </div>
 
           <p className="mt-6 text-center text-xs text-muted">
             Internal use only. Contact admin if you need access.
