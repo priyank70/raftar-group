@@ -87,3 +87,4 @@ raftar-group/
 ## 📱 Mobile-First Design
 
 Fully responsive with bottom navigation on mobile, sidebar on desktop.
+# raftar-group
