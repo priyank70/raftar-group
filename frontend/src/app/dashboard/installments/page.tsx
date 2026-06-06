@@ -194,8 +194,10 @@ function PaymentModal({ isOpen, onClose, group, pendingInstallments, hasPendingP
 
   const numAmount = Number(amount);
   const installmentAmt = group?.installmentAmount || 1000;
-  const coverage = Math.floor(numAmount / installmentAmt);
-  const balance = numAmount % installmentAmt;
+  // Deduct penalty before computing coverage so penalty doesn't look like "credit"
+  const baseForCoverage = Math.max(0, numAmount - (mode === 'online' ? dynamicPenalty : 0));
+  const coverage = Math.floor(baseForCoverage / installmentAmt);
+  const balance = baseForCoverage % installmentAmt;
   const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URL || '';
 
   return (
@@ -384,14 +386,17 @@ function PaymentModal({ isOpen, onClose, group, pendingInstallments, hasPendingP
                       {numAmount > 0 && coverage > 0 && (
                         <p className="text-xs text-accent font-semibold mt-2">
                           ℹ️ Covers {coverage} installment{coverage > 1 ? 's' : ''}
-                          {balance > 0 ? ` with ₹${balance} credit` : ''}
+                          {balance > 0 ? ` with ₹${balance} remaining` : ''}
                         </p>
                       )}
-                      {dynamicPenalty > 0 && numAmount === baseAmount + dynamicPenalty && (
-                        <p className="text-xs text-danger font-medium mt-2">⚠️ Includes penalty of ₹{dynamicPenalty} for late payment.</p>
+                      {dynamicPenalty > 0 && (
+                        <p className="text-xs text-danger font-medium mt-2">⚠️ Includes ₹{dynamicPenalty} penalty for late payment (not counted as installment).</p>
                       )}
-                      {targetInstallment && dynamicPenalty === 0 && numAmount === baseAmount && (
-                        <p className="text-xs text-success font-medium mt-2">✅ No penalty applied.</p>
+                      {targetInstallment && dynamicPenalty === 0 && numAmount > 0 && numAmount < installmentAmt && (
+                        <p className="text-xs text-warning font-medium mt-2">⚠️ Amount is less than one installment (₹{installmentAmt}).</p>
+                      )}
+                      {targetInstallment && dynamicPenalty === 0 && numAmount >= installmentAmt && balance === 0 && coverage > 0 && (
+                        <p className="text-xs text-success font-medium mt-2">✅ No penalty — exact amount.</p>
                       )}
                     </div>
 
@@ -460,8 +465,11 @@ function PaymentModal({ isOpen, onClose, group, pendingInstallments, hasPendingP
                       {numAmount > 0 && coverage > 0 && (
                         <p className="text-xs text-accent font-semibold mt-2">
                           ℹ️ Covers {coverage} installment{coverage > 1 ? 's' : ''}
-                          {balance > 0 ? ` with ₹${balance} credit` : ''}
+                          {balance > 0 ? ` with ₹${balance} remaining` : ''}
                         </p>
+                      )}
+                      {numAmount > 0 && numAmount < installmentAmt && (
+                        <p className="text-xs text-warning font-medium mt-2">⚠️ Amount is less than one installment (₹{installmentAmt}).</p>
                       )}
                     </div>
 
@@ -616,7 +624,8 @@ export default function InstallmentsPage() {
           </div>
           <div className="divide-y divide-gray-50">
             {statusData?.pendingInstallments?.map((inst: any, i: number) => {
-              const isOverdue = new Date(inst.dueDate) < new Date();
+              const effectiveDue = inst.extendedDueDate || inst.dueDate;
+              const isOverdue = new Date(effectiveDue) < new Date();
               return (
                 <motion.div key={inst._id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.05 }} className="flex items-center gap-4 p-4">

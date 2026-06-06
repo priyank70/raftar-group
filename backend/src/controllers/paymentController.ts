@@ -186,21 +186,61 @@ export const approvePayment = async (req: AuthRequest, res: Response): Promise<v
     payment.reviewedAt = new Date();
 
     // Cover installments based on actual amount and penalties calculated up to payment date
-    const pendingInstallments = await Installment.find({
+    // Strategy: apply payment from the current month forward (oldest affordable first).
+    // If overdue months have massive penalties that the payment can't cover, they stay overdue.
+    // This matches user expectation: ₹5000 paid today covers current+future months (no penalty),
+    // not stuck trying to clear old months with huge accumulated penalties.
+
+    const now = new Date();
+    const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+
+    const allPendingInstallments = await Installment.find({
       userId: payment.userId,
       status: { $in: ['pending', 'overdue'] },
     }).sort({ year: 1, month: 1 });
 
+    // Separate overdue (before current month) from current/future
+    const overdueInstallments = allPendingInstallments.filter((inst) => {
+      const instDate = new Date(inst.year, inst.month - 1, 1);
+      return instDate < currentMonthStart;
+    });
+    const currentAndFutureInstallments = allPendingInstallments.filter((inst) => {
+      const instDate = new Date(inst.year, inst.month - 1, 1);
+      return instDate >= currentMonthStart;
+    });
+
     const coveredInstallmentIds = [];
     let remainingPaymentAmount = payment.amount;
 
-    for (const inst of pendingInstallments) {
+    // First: try to clear overdue months (oldest first) — but only if affordable
+    for (const inst of overdueInstallments) {
       const targetDate = inst.extendedDueDate ? startOfDay(inst.extendedDueDate) : startOfDay(inst.dueDate);
       const paymentDateStart = startOfDay(payment.submittedAt);
       const daysLate = targetDate < paymentDateStart ? differenceInDays(paymentDateStart, targetDate) : 0;
       const calculatedPenalty = inst.isDelayed ? 0 : Math.round(inst.amount * (group.penaltyRate / 100) * daysLate);
-
       const totalDueForInst = inst.amount + calculatedPenalty;
+
+      if (remainingPaymentAmount >= totalDueForInst) {
+        remainingPaymentAmount -= totalDueForInst;
+        inst.status = 'paid';
+        inst.paidAt = payment.submittedAt;
+        inst.penaltyAmount = calculatedPenalty;
+        inst.penaltyDays = daysLate;
+        inst.advancePaymentId = payment._id;
+        await inst.save();
+        coveredInstallmentIds.push(inst._id);
+      }
+      // If can't afford this overdue month's total (huge penalty), skip it — don't block future months
+    }
+
+    // Then: apply remaining amount to current month and future installments
+    for (const inst of currentAndFutureInstallments) {
+      const targetDate = inst.extendedDueDate ? startOfDay(inst.extendedDueDate) : startOfDay(inst.dueDate);
+      const paymentDateStart = startOfDay(payment.submittedAt);
+      const daysLate = targetDate < paymentDateStart ? differenceInDays(paymentDateStart, targetDate) : 0;
+      const calculatedPenalty = inst.isDelayed ? 0 : Math.round(inst.amount * (group.penaltyRate / 100) * daysLate);
+      const totalDueForInst = inst.amount + calculatedPenalty;
+
       if (remainingPaymentAmount >= totalDueForInst) {
         remainingPaymentAmount -= totalDueForInst;
         inst.status = 'paid';
