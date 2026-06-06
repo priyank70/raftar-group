@@ -202,6 +202,7 @@ function PaymentModal({ isOpen, onClose, group, pendingInstallments, hasPendingP
   const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URL || '';
 
   return (
+    <>
     <AnimatePresence>
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
@@ -343,45 +344,6 @@ function PaymentModal({ isOpen, onClose, group, pendingInstallments, hasPendingP
                             style={{ imageRendering: 'pixelated' }}
                           />
                         </div>
-
-                        {/* Expanded QR Modal */}
-                        <AnimatePresence>
-                          {isQrExpanded && (
-                            <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
-                              <motion.div
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                exit={{ opacity: 0 }}
-                                className="absolute inset-0 bg-black/80 backdrop-blur-sm cursor-zoom-out"
-                                onClick={() => setIsQrExpanded(false)}
-                              />
-                              <motion.div
-                                initial={{ scale: 0.9, opacity: 0 }}
-                                animate={{ scale: 1, opacity: 1 }}
-                                exit={{ scale: 0.9, opacity: 0 }}
-                                transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-                                className="relative bg-white p-4 rounded-3xl shadow-2xl z-10 max-w-sm w-full mx-auto flex flex-col items-center"
-                              >
-                                <button
-                                  onClick={() => setIsQrExpanded(false)}
-                                  className="absolute -top-3 -right-3 w-10 h-10 bg-white rounded-full text-gray-900 shadow-xl flex items-center justify-center hover:bg-gray-100"
-                                >
-                                  <X className="w-5 h-5" />
-                                </button>
-                                <p className="text-lg font-bold text-gray-900 mb-4">Scan to Pay</p>
-                                <img
-                                  src={`${socketUrl}${group.qrCodeImage}`}
-                                  alt="Expanded QR Code"
-                                  className="w-full h-auto object-contain rounded-2xl"
-                                  style={{ imageRendering: 'pixelated', maxHeight: '70vh' }}
-                                />
-                                {group.upiName && (
-                                  <p className="mt-4 font-bold text-gray-900 text-center">{group.upiName}</p>
-                                )}
-                              </motion.div>
-                            </div>
-                          )}
-                        </AnimatePresence>
                         {group.upiName && (
                           <p className="text-sm font-bold text-gray-900">{group.upiName}</p>
                         )}
@@ -549,6 +511,46 @@ function PaymentModal({ isOpen, onClose, group, pendingInstallments, hasPendingP
         </div>
       )}
     </AnimatePresence>
+
+    {/* Expanded QR Modal placed completely outside transform context */}
+    <AnimatePresence>
+      {isQrExpanded && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 bg-black/80 backdrop-blur-sm cursor-zoom-out"
+            onClick={() => setIsQrExpanded(false)}
+          />
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+            className="relative bg-white p-4 rounded-3xl shadow-2xl z-10 max-w-sm w-full mx-auto flex flex-col items-center"
+          >
+            <button
+              onClick={() => setIsQrExpanded(false)}
+              className="absolute -top-3 -right-3 w-10 h-10 bg-white rounded-full text-gray-900 shadow-xl flex items-center justify-center hover:bg-gray-100"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <p className="text-lg font-bold text-gray-900 mb-4">Scan to Pay</p>
+            <img
+              src={`${socketUrl}${group?.qrCodeImage}`}
+              alt="Expanded QR Code"
+              className="w-full h-auto object-contain rounded-2xl"
+              style={{ imageRendering: 'pixelated', maxHeight: '70vh' }}
+            />
+            {group?.upiName && (
+              <p className="mt-4 font-bold text-gray-900 text-center">{group.upiName}</p>
+            )}
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
+    </>
   );
 }
 
