@@ -414,6 +414,24 @@ select.input {
 }
 
 /* ============================================
+   MODAL OPEN STATE — body scroll lock helpers
+   ============================================ */
+body.modal-open {
+  /* Extra safety for iOS — prevent all touch-based scrolling */
+  touch-action: none;
+  -webkit-overflow-scrolling: auto;
+}
+
+/* On iOS Safari, sticky elements with backdrop-filter create a compositing
+   layer that can "float above" fixed-position modal overlays. When a modal
+   is open, we remove the blur and make the header fully opaque instead. */
+body.modal-open .header-blur {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  background-color: rgba(255,255,255,1) !important;
+}
+
+/* ============================================
    PRINT
    ============================================ */
 @media print {

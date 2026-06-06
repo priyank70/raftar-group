@@ -58,7 +58,7 @@ export function Header({ onMenuClick }: HeaderProps) {
   };
 
   return (
-    <header className="sticky top-0 z-20 bg-white/90 backdrop-blur-md border-b border-gray-100 px-4 lg:px-6 py-3.5">
+    <header className="header-blur sticky top-0 z-20 bg-white/90 backdrop-blur-md border-b border-gray-100 px-4 lg:px-6 py-3.5">
       <div className="flex items-center justify-between">
         {/* Left: Hamburger menu & Page title */}
         <div className="flex items-center gap-3">

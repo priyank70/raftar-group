@@ -12,6 +12,7 @@ import { formatCurrency, formatDate, getMonthName } from '@/lib/utils';
 import { useAuthStore } from '@/store/authStore';
 import { Pagination } from '@/components/ui/Pagination';
 import toast from 'react-hot-toast';
+import { useScrollLock } from '@/hooks/useScrollLock';
 
 // ─── Delay Request Modal ───────────────────────────────────────────────────────
 function DelayRequestModal({ isOpen, onClose, installmentId, dueDate }: any) {
@@ -19,6 +20,9 @@ function DelayRequestModal({ isOpen, onClose, installmentId, dueDate }: any) {
   const [reason, setReason] = useState('');
   const [notes, setNotes] = useState('');
   const qClient = useQueryClient();
+
+  // Lock body scroll when modal is open
+  useScrollLock(isOpen);
 
   const minDate = dueDate ? (() => {
     const d = new Date(dueDate);
@@ -138,6 +142,9 @@ function PaymentModal({ isOpen, onClose, group, pendingInstallments, hasPendingP
   const [paymentDate, setPaymentDate] = useState(() => new Date().toISOString().split('T')[0]);
   const [isQrExpanded, setIsQrExpanded] = useState(false);
   const qClient = useQueryClient();
+
+  // Lock body scroll when modal is open
+  useScrollLock(isOpen);
 
   const targetInstallment = pendingInstallments?.length > 0 ? pendingInstallments[0] : null;
   const baseAmount = targetInstallment ? targetInstallment.amount : (group?.installmentAmount || 1000);

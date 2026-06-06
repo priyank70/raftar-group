@@ -8,9 +8,11 @@ import api from '@/lib/api';
 import { formatDate, getInitials, formatCurrency } from '@/lib/utils';
 import { useAuthStore } from '@/store/authStore';
 import toast from 'react-hot-toast';
+import { useScrollLock } from '@/hooks/useScrollLock';
 
 function AddMemberModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const qClient = useQueryClient();
+  useScrollLock(isOpen);
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -111,6 +113,7 @@ function AddMemberModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
 
 function ProposeDisableModal({ isOpen, onClose, member }: { isOpen: boolean; onClose: () => void; member: any }) {
   const qClient = useQueryClient();
+  useScrollLock(isOpen);
   const [reason, setReason] = useState('');
 
   const disableMutation = useMutation({

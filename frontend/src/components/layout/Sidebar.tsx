@@ -12,6 +12,7 @@ import { useAuthStore } from '@/store/authStore';
 import { getInitials } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
+import { useScrollLock } from '@/hooks/useScrollLock';
 
 const memberNavItems = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard', exact: true },
@@ -54,6 +55,9 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const router = useRouter();
 
   const navItems = user?.role === 'admin' ? adminNavItems : memberNavItems;
+
+  // Lock body scroll when mobile sidebar is open
+  useScrollLock(isOpen);
 
   const isActive = (item: { href: string; exact?: boolean }) => {
     if (item.exact) return pathname === item.href;

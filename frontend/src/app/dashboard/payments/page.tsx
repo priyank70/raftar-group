@@ -9,9 +9,11 @@ import { formatCurrency, formatDate, formatRelativeTime, getInitials } from '@/l
 import { useAuthStore } from '@/store/authStore';
 import { Pagination } from '@/components/ui/Pagination';
 import toast from 'react-hot-toast';
+import { useScrollLock } from '@/hooks/useScrollLock';
 
 function PaymentDetailModal({ payment, onClose, isAdmin }: any) {
   const qClient = useQueryClient();
+  useScrollLock(!!payment);
   const [adminNote, setAdminNote] = useState('');
 
   const approveMutation = useMutation({

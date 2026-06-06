@@ -13,6 +13,7 @@ import { formatCurrency, formatDate, getInitials } from '@/lib/utils';
 import { useAuthStore } from '@/store/authStore';
 import { Pagination } from '@/components/ui/Pagination';
 import toast from 'react-hot-toast';
+import { useScrollLock } from '@/hooks/useScrollLock';
 
 // ─── Live Calculator ────────────────────────────────────────────────────────
 function LiveCalculator() {
@@ -94,6 +95,7 @@ function LiveCalculator() {
 // ─── EMI Repayment Modal ─────────────────────────────────────────────────────
 function RecordEmiModal({ isOpen, onClose, investment }: any) {
   const qClient = useQueryClient();
+  useScrollLock(isOpen);
   const now = new Date();
   const [form, setForm] = useState({
     month: now.getMonth() + 1,
@@ -178,6 +180,7 @@ interface NewInvestmentModalProps {
 
 function NewInvestmentModal({ isOpen, onClose, investment }: NewInvestmentModalProps) {
   const qClient = useQueryClient();
+  useScrollLock(isOpen);
   const [repaymentMode, setRepaymentMode] = useState<'emi' | 'lump_sum'>('lump_sum');
   const [calcResult, setCalcResult] = useState<any>(null);
   const [form, setForm] = useState({
@@ -584,6 +587,7 @@ interface ApprovalConfirmModalProps {
 
 function ApprovalConfirmModal({ isOpen, onClose, investment }: ApprovalConfirmModalProps) {
   const qClient = useQueryClient();
+  useScrollLock(isOpen);
   const [checked, setChecked] = useState(false);
 
   const approveMutation = useMutation({
