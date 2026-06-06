@@ -32,13 +32,13 @@ const orbs = [
 /* ─── animation presets ─── */
 const stagger = {
   container: { hidden: {}, visible: { transition: { staggerChildren: 0.1, delayChildren: 0.15 } } },
-  item: { hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: 'easeOut' } } },
+  item: { hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: 'easeOut' as const } } },
 };
 
 const fadeSlide = (delay = 0) => ({
   initial: { opacity: 0, y: 30 },
   animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.65, delay, ease: 'easeOut' },
+  transition: { duration: 0.65, delay, ease: 'easeOut' as const },
 });
 
 /* ─────────────────────────────────────────────
