@@ -21,6 +21,12 @@ export const getUsers = async (req: AuthRequest, res: Response): Promise<void> =
       { $group: { _id: '$userId', totalPaid: { $sum: '$amount' } } }
     ]);
 
+    // Aggregate exact penalty amounts from paid installments
+    const penaltySums = await Installment.aggregate([
+      { $match: { status: 'paid' } },
+      { $group: { _id: '$userId', totalPenaltyPaid: { $sum: '$penaltyAmount' } } }
+    ]);
+
     // Create a map for fast lookup
     const paymentMap = new Map<string, number>();
     paymentSums.forEach((p) => {
@@ -29,13 +35,22 @@ export const getUsers = async (req: AuthRequest, res: Response): Promise<void> =
       }
     });
 
+    const penaltyMap = new Map<string, number>();
+    penaltySums.forEach((p) => {
+      if (p._id) {
+        penaltyMap.set(p._id.toString(), p.totalPenaltyPaid);
+      }
+    });
+
     // Attach totalPaid and sort users
     const usersWithStats = allUsers.map((user) => {
       const totalPaid = paymentMap.get(user._id.toString()) || 0;
+      const totalPenaltyPaid = penaltyMap.get(user._id.toString()) || 0;
       const userObj = user.toJSON();
       return {
         ...userObj,
-        totalPaid
+        totalPaid: Math.max(0, totalPaid - totalPenaltyPaid), // Invested pure principal
+        totalPenaltyPaid
       };
     });
 

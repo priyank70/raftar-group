@@ -695,10 +695,15 @@ export default function InstallmentsPage() {
                     {isAdmin && inst.userId?.name ? `${inst.userId.name} - ` : ''}
                     {getMonthName(inst.month, inst.year)}
                   </p>
-                  <p className="text-xs text-muted">{formatDate(inst.dueDate)}</p>
+                  <p className="text-xs text-muted">Due {formatDate(inst.dueDate)} · Paid {formatDate(inst.paidAt || inst.updatedAt)}</p>
+                  {inst.penaltyAmount > 0 && (
+                    <p className="text-xs text-danger font-medium mt-0.5">
+                      + {formatCurrency(inst.penaltyAmount)} late penalty
+                    </p>
+                  )}
                 </div>
                 <div className="text-right">
-                  <p className="font-semibold text-gray-900 text-sm">{formatCurrency(inst.amount)}</p>
+                  <p className="font-semibold text-gray-900 text-sm">{formatCurrency(inst.amount + (inst.penaltyAmount || 0))}</p>
                   <span className="badge badge-success">Paid</span>
                 </div>
               </motion.div>

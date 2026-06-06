@@ -340,6 +340,13 @@ export default function MembersPage() {
                       </span>
                     )}
 
+                    {/* Penalty Paid Badge */}
+                    {member.totalPenaltyPaid > 0 && (
+                      <span className="badge bg-danger-bg text-danger border border-danger/20 font-medium flex items-center gap-1">
+                        <span>Penalty: {formatCurrency(member.totalPenaltyPaid)}</span>
+                      </span>
+                    )}
+
                     {member.isDisabled && (
                       <span className="bg-red-50 text-red-600 border border-red-100/50 px-2 py-0.5 rounded-lg text-xs font-semibold flex items-center gap-1 animate-pulse">
                         🔒 Disabled
@@ -356,9 +363,10 @@ export default function MembersPage() {
                       <button
                         onClick={() => promoteMutation.mutate(member._id)}
                         title="Promote to Admin"
-                        className="w-8 h-8 rounded-xl bg-accent/10 flex items-center justify-center text-accent hover:bg-accent hover:text-white transition-all"
+                        className="px-3 py-1.5 rounded-xl bg-accent/10 flex items-center gap-1.5 text-xs font-semibold text-accent hover:bg-accent hover:text-white transition-all"
                       >
                         <Shield className="w-3.5 h-3.5" />
+                        <span>Promote</span>
                       </button>
                     )}
                     {member.role === 'admin' && !member.isDisabled && (
@@ -378,9 +386,10 @@ export default function MembersPage() {
                       <button
                         onClick={() => handleProposeDisable(member)}
                         title="Propose to Disable"
-                        className="w-8 h-8 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600 hover:bg-amber-500 hover:text-white transition-all"
+                        className="px-3 py-1.5 rounded-xl bg-amber-50 flex items-center gap-1.5 text-xs font-semibold text-amber-600 hover:bg-amber-500 hover:text-white transition-all"
                       >
                         <UserMinus className="w-3.5 h-3.5" />
+                        <span>Disable</span>
                       </button>
                     ) : (
                       <button
