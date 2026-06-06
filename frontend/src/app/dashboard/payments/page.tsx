@@ -75,12 +75,15 @@ function PaymentDetailModal({ payment, onClose, isAdmin }: any) {
                 <div>
                   <p className="text-xs text-muted">Amount</p>
                   <p className="text-2xl font-bold text-gray-900">{formatCurrency(payment.amount)}</p>
+                  {payment.penaltyIncluded > 0 && (
+                    <p className="text-xs text-danger font-medium mt-1">incl. ₹{payment.penaltyIncluded} penalty</p>
+                  )}
                 </div>
                 <div className="text-right">
                   <p className="text-xs text-muted">Coverage</p>
                   <p className="font-semibold text-accent">{payment.coverageMonths} month{payment.coverageMonths !== 1 ? 's' : ''}</p>
                   {payment.remainingBalance > 0 && (
-                    <p className="text-xs text-muted">+{formatCurrency(payment.remainingBalance)} credit</p>
+                    <p className="text-xs text-muted">+{formatCurrency(payment.remainingBalance)} remaining</p>
                   )}
                 </div>
               </div>
