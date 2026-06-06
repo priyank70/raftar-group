@@ -189,13 +189,13 @@ function PaymentModal({ isOpen, onClose, group, pendingInstallments, hasPendingP
 
   const handleCashSubmit = () => {
     if (!amount || Number(amount) <= 0) { toast.error('Please enter a valid amount'); return; }
-    submitMutation.mutate({ amount, transactionNote: note, paymentDate, isCashPayment: true });
+    submitMutation.mutate({ amount, transactionNote: note, paymentDate, penaltyIncluded: dynamicPenalty, isCashPayment: true });
   };
 
   const numAmount = Number(amount);
   const installmentAmt = group?.installmentAmount || 1000;
   // Deduct penalty before computing coverage so penalty doesn't look like "credit"
-  const baseForCoverage = Math.max(0, numAmount - (mode === 'online' ? dynamicPenalty : 0));
+  const baseForCoverage = Math.max(0, numAmount - dynamicPenalty);
   const coverage = Math.floor(baseForCoverage / installmentAmt);
   const balance = baseForCoverage % installmentAmt;
   const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URL || '';
@@ -468,8 +468,14 @@ function PaymentModal({ isOpen, onClose, group, pendingInstallments, hasPendingP
                           {balance > 0 ? ` with ₹${balance} remaining` : ''}
                         </p>
                       )}
+                      {dynamicPenalty > 0 && (
+                        <p className="text-xs text-danger font-medium mt-2">⚠️ Includes ₹{dynamicPenalty} penalty for late payment (not counted as installment).</p>
+                      )}
                       {numAmount > 0 && numAmount < installmentAmt && (
                         <p className="text-xs text-warning font-medium mt-2">⚠️ Amount is less than one installment (₹{installmentAmt}).</p>
+                      )}
+                      {targetInstallment && dynamicPenalty === 0 && numAmount >= installmentAmt && balance === 0 && coverage > 0 && (
+                        <p className="text-xs text-success font-medium mt-2">✅ No penalty — exact amount.</p>
                       )}
                     </div>
 
