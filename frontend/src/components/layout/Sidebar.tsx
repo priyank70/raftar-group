@@ -57,7 +57,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const navItems = user?.role === 'admin' ? adminNavItems : memberNavItems;
 
   // Lock body scroll when mobile sidebar is open
-  useScrollLock(isOpen);
+  useScrollLock(!!isOpen);
 
   const isActive = (item: { href: string; exact?: boolean }) => {
     if (item.exact) return pathname === item.href;

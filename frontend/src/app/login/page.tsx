@@ -473,7 +473,6 @@ export default function LoginPage() {
         <div
           className="lg:hidden flex-1 relative overflow-hidden flex flex-col"
           style={{
-            minHeight: '100vh',
             minHeight: '100dvh',
             background: 'linear-gradient(170deg, #0F172A 0%, #0a1628 35%, #091f1c 65%, #0c2420 100%)',
           }}
