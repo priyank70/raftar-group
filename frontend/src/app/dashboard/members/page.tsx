@@ -35,10 +35,11 @@ function AddMemberModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
         joinedAt: new Date().toISOString().split('T')[0]
       });
     },
-    onError: (err: any) => toast.error(err?.response?.data?.message || 'Failed to add member'),
-  });
-
-  return (
+    onError: (err: any) => {
+      console.error("Error adding member:", err);
+      const msg = err?.response?.data?.message || err.message || 'Failed to add member';
+      toast.error(msg);
+    },
     <AnimatePresence>
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">

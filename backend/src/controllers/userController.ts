@@ -136,8 +136,9 @@ export const createUser = async (req: AuthRequest, res: Response): Promise<void>
     await createInstallmentsForUser(user._id.toString());
 
     res.status(201).json({ success: true, message: 'Member added successfully', data: user });
-  } catch (error) {
-    res.status(500).json({ success: false, message: 'Server error' });
+  } catch (error: any) {
+    console.error('Error in createUser:', error);
+    res.status(500).json({ success: false, message: error?.message || 'Server error' });
   }
 };
 
