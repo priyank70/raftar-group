@@ -40,6 +40,9 @@ function AddMemberModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
       const msg = err?.response?.data?.message || err.message || 'Failed to add member';
       toast.error(msg);
     },
+  });
+
+  return (
     <AnimatePresence>
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
