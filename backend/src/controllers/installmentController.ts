@@ -12,10 +12,26 @@ export const createInstallmentsForUser = async (userId: string): Promise<void> =
   const group = await Group.findOne({ isActive: true });
   if (!group) return;
 
-  const startDate = group.startDate || new Date();
+  const user = await User.findById(userId);
+  if (!user) return;
+
+  const startDate = user.joinedAt || group.startDate || new Date();
   const now = new Date();
-  
-  // Calculate months from start date to now + 12 months
+
+  // 1. Clean up pending/overdue installments from before the user's joined date
+  const joinedMonth = startDate.getMonth() + 1;
+  const joinedYear = startDate.getFullYear();
+
+  await Installment.deleteMany({
+    userId,
+    status: { $in: ['pending', 'overdue'] },
+    $or: [
+      { year: { $lt: joinedYear } },
+      { year: joinedYear, month: { $lt: joinedMonth } }
+    ]
+  });
+
+  // 2. Generate installments from user's joinedAt date up to now + 12 months
   const monthsDiff = (now.getFullYear() - startDate.getFullYear()) * 12 + (now.getMonth() - startDate.getMonth()) + 12;
   const totalMonths = Math.max(12, monthsDiff);
 

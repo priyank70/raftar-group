@@ -24,7 +24,7 @@ const GroupSchema = new Schema<IGroup>(
     name: { type: String, required: true, default: 'Raftar Group' },
     description: { type: String },
     installmentAmount: { type: Number, required: true, default: 1000 },
-    dueDay: { type: Number, required: true, default: 25, min: 1, max: 31 },
+    dueDay: { type: Number, required: true, default: 10, min: 1, max: 31 },
     penaltyRate: { type: Number, required: true, default: 10 }, // 10% per day
     qrCodeImage: { type: String },
     upiId: { type: String },

@@ -100,7 +100,7 @@ export const getUserById = async (req: AuthRequest, res: Response): Promise<void
 // POST /api/users (admin only)
 export const createUser = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const { name, email, phone, password, role } = req.body;
+    const { name, email, phone, password, role, joinedAt } = req.body;
 
     const existingUser = await User.findOne({ email: email.toLowerCase() });
     if (existingUser) {
@@ -108,7 +108,14 @@ export const createUser = async (req: AuthRequest, res: Response): Promise<void>
       return;
     }
 
-    const user = await User.create({ name, email, phone, password, role: role || 'member' });
+    const user = await User.create({
+      name,
+      email,
+      phone,
+      password,
+      role: role || 'member',
+      joinedAt: joinedAt ? new Date(joinedAt) : new Date()
+    });
 
     // Create installments for new member
     await createInstallmentsForUser(user._id.toString());
@@ -122,7 +129,7 @@ export const createUser = async (req: AuthRequest, res: Response): Promise<void>
 // PUT /api/users/:id (admin only)
 export const updateUser = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const { name, email, phone, role, isActive } = req.body;
+    const { name, email, phone, role, isActive, joinedAt } = req.body;
     // Only update fields that are explicitly provided to avoid accidentally nullifying fields
     const updateData: Record<string, unknown> = {};
     if (name !== undefined) updateData.name = name;
@@ -130,6 +137,7 @@ export const updateUser = async (req: AuthRequest, res: Response): Promise<void>
     if (phone !== undefined) updateData.phone = phone;
     if (role !== undefined) updateData.role = role;
     if (isActive !== undefined) updateData.isActive = isActive;
+    if (joinedAt !== undefined) updateData.joinedAt = new Date(joinedAt);
 
     const user = await User.findByIdAndUpdate(
       req.params.id,
@@ -139,6 +147,9 @@ export const updateUser = async (req: AuthRequest, res: Response): Promise<void>
     if (!user) {
       res.status(404).json({ success: false, message: 'User not found' });
       return;
+    }
+    if (joinedAt !== undefined) {
+      await createInstallmentsForUser(user._id.toString());
     }
     res.json({ success: true, message: 'User updated', data: user });
   } catch (error) {

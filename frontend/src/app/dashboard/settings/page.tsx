@@ -31,7 +31,7 @@ export default function SettingsPage() {
 
   const [settings, setSettings] = useState({
     installmentAmount: group?.installmentAmount || 1000,
-    dueDay: group?.dueDay || 25,
+    dueDay: group?.dueDay || 10,
     penaltyRate: group?.penaltyRate || 10,
     upiId: group?.upiId || '',
     upiName: group?.upiName || '',

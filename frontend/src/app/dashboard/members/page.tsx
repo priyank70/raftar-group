@@ -11,7 +11,14 @@ import toast from 'react-hot-toast';
 
 function AddMemberModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const qClient = useQueryClient();
-  const [form, setForm] = useState({ name: '', email: '', phone: '', password: '', role: 'member' });
+  const [form, setForm] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    password: '',
+    role: 'member',
+    joinedAt: new Date().toISOString().split('T')[0]
+  });
 
   const createMutation = useMutation({
     mutationFn: (data: any) => api.post('/users', data),
@@ -19,7 +26,14 @@ function AddMemberModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
       toast.success('Member added successfully! 🎉');
       qClient.invalidateQueries({ queryKey: ['users'] });
       onClose();
-      setForm({ name: '', email: '', phone: '', password: '', role: 'member' });
+      setForm({
+        name: '',
+        email: '',
+        phone: '',
+        password: '',
+        role: 'member',
+        joinedAt: new Date().toISOString().split('T')[0]
+      });
     },
     onError: (err: any) => toast.error(err?.response?.data?.message || 'Failed to add member'),
   });
@@ -62,12 +76,19 @@ function AddMemberModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
                 <input className="input" type="password" placeholder="Min 6 characters" value={form.password}
                   onChange={(e) => setForm({ ...form, password: e.target.value })} />
               </div>
-              <div>
-                <label className="label">Role</label>
-                <select className="input" value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })}>
-                  <option value="member">Member</option>
-                  <option value="admin">Admin</option>
-                </select>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="label">Role</label>
+                  <select className="input" value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })}>
+                    <option value="member">Member</option>
+                    <option value="admin">Admin</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="label">Joined Date</label>
+                  <input className="input" type="date" value={form.joinedAt}
+                    onChange={(e) => setForm({ ...form, joinedAt: e.target.value })} />
+                </div>
               </div>
               <button
                 onClick={() => createMutation.mutate(form)}

@@ -549,7 +549,7 @@ export default function InstallmentsPage() {
               ) : (
                 <p className="text-slate-400 text-sm mt-2">
                   Due on the{' '}
-                  <span className="text-accent-light font-bold">{statusData?.group?.dueDay || 25}th</span>{' '}
+                  <span className="text-accent-light font-bold">{statusData?.group?.dueDay || 10}th</span>{' '}
                   of every month
                 </p>
               )}

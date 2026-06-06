@@ -37,7 +37,7 @@ const seedDatabase = async () => {
       phone: '9876543210',
       password: 'Priyank@123',
       role: 'admin',
-      joinedAt: new Date(),
+      joinedAt: new Date('2026-01-01'),
     });
     console.log(`✅ Admin created: ${admin.email}`);
 
@@ -46,7 +46,7 @@ const seedDatabase = async () => {
       name: 'Raftar Group',
       description: 'Digital Mandal Management System for Raftar Group members',
       installmentAmount: 1000,
-      dueDay: 25,
+      dueDay: 10,
       penaltyRate: 10,
       upiId: 'raftar@upi',
       upiName: 'Raftar Group',
@@ -54,7 +54,7 @@ const seedDatabase = async () => {
       totalMembers: 1,
       createdBy: admin._id,
       startDate: new Date('2026-01-01'), // From user request
-      rules: ['Installments must be paid by the 25th of every month.'],
+      rules: ['Installments must be paid by the 10th of every month.'],
     });
     console.log(`✅ Group created: ${group.name}`);
 
