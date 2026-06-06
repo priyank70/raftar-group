@@ -312,7 +312,7 @@ export default function MembersPage() {
                     </span>
                     
                     {/* Rank Badge */}
-                    {member.rank !== undefined && (
+                    {member.rank && (
                       <span className={`badge font-semibold flex items-center gap-1 ${
                         member.rank === 1 ? 'bg-amber-50 text-amber-800 border border-amber-200/60' :
                         member.rank === 2 ? 'bg-slate-50 text-slate-800 border border-slate-200/60' :
@@ -333,15 +333,13 @@ export default function MembersPage() {
                     )}
 
                     {/* Money Invested Badge */}
-                    {member.totalPaid !== undefined && (
-                      <span className="badge bg-emerald-50 text-emerald-700 border border-emerald-100 font-medium flex items-center gap-1">
-                        <Coins className="w-3.5 h-3.5 text-emerald-500" />
-                        <span>Invested: {formatCurrency(member.totalPaid)}</span>
-                      </span>
-                    )}
+                    <span className="badge bg-emerald-50 text-emerald-700 border border-emerald-100 font-medium flex items-center gap-1">
+                      <Coins className="w-3.5 h-3.5 text-emerald-500" />
+                      <span>Invested: {formatCurrency(member.totalPaid || 0)}</span>
+                    </span>
 
                     {/* Penalty Paid Badge */}
-                    {member.totalPenaltyPaid > 0 && (
+                    {(member.totalPenaltyPaid || 0) > 0 && (
                       <span className="badge bg-danger-bg text-danger border border-danger/20 font-medium flex items-center gap-1">
                         <span>Penalty: {formatCurrency(member.totalPenaltyPaid)}</span>
                       </span>
