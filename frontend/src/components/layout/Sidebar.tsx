@@ -15,6 +15,7 @@ import toast from 'react-hot-toast';
 
 const memberNavItems = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard', exact: true },
+  { href: '/dashboard/members', icon: Users, label: 'Members' },
   { href: '/dashboard/installments', icon: Wallet, label: 'Installments' },
   { href: '/dashboard/payments', icon: CreditCard, label: 'Payments' },
   { href: '/dashboard/investments', icon: TrendingUp, label: 'Investments' },

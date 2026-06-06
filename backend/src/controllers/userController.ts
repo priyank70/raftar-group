@@ -12,24 +12,65 @@ export const getUsers = async (req: AuthRequest, res: Response): Promise<void> =
     const limit = parseInt(req.query.limit as string) || 10;
     const search = req.query.search as string;
 
-    const query: Record<string, any> = { isActive: true };
+    // Fetch all active users
+    const allUsers = await User.find({ isActive: true });
 
+    // Aggregate payment totals for all users (approved payments only)
+    const paymentSums = await Payment.aggregate([
+      { $match: { status: 'approved' } },
+      { $group: { _id: '$userId', totalPaid: { $sum: '$amount' } } }
+    ]);
+
+    // Create a map for fast lookup
+    const paymentMap = new Map<string, number>();
+    paymentSums.forEach((p) => {
+      if (p._id) {
+        paymentMap.set(p._id.toString(), p.totalPaid);
+      }
+    });
+
+    // Attach totalPaid and sort users
+    const usersWithStats = allUsers.map((user) => {
+      const totalPaid = paymentMap.get(user._id.toString()) || 0;
+      const userObj = user.toJSON();
+      return {
+        ...userObj,
+        totalPaid
+      };
+    });
+
+    // Sort by totalPaid descending, then joinedAt ascending
+    usersWithStats.sort((a, b) => {
+      if (b.totalPaid !== a.totalPaid) {
+        return b.totalPaid - a.totalPaid;
+      }
+      return new Date(a.joinedAt).getTime() - new Date(b.joinedAt).getTime();
+    });
+
+    // Assign rank
+    const rankedUsers = usersWithStats.map((user, index) => ({
+      ...user,
+      rank: index + 1
+    }));
+
+    // Apply search filter if query is present
+    let filteredUsers = rankedUsers;
     if (search) {
-      query.$or = [
-        { name: { $regex: search, $options: 'i' } },
-        { email: { $regex: search, $options: 'i' } }
-      ];
+      const searchLower = search.toLowerCase();
+      filteredUsers = rankedUsers.filter(
+        (u) =>
+          u.name.toLowerCase().includes(searchLower) ||
+          u.email.toLowerCase().includes(searchLower)
+      );
     }
 
-    const total = await User.countDocuments(query);
-    const users = await User.find(query)
-      .sort({ joinedAt: 1 })
-      .skip((page - 1) * limit)
-      .limit(limit);
+    // Paginate results
+    const total = filteredUsers.length;
+    const paginatedUsers = filteredUsers.slice((page - 1) * limit, page * limit);
 
     res.json({
       success: true,
-      data: users,
+      data: paginatedUsers,
       pagination: {
         total,
         page,

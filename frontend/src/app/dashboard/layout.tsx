@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/authStore';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { Header } from '@/components/layout/Header';
-import { MobileNav } from '@/components/layout/MobileNav';
 import { motion } from 'framer-motion';
 
 export default function DashboardLayout({
@@ -60,12 +59,10 @@ export default function DashboardLayout({
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
-          className="flex-1 p-4 lg:p-6 pb-24 lg:pb-6 overflow-x-hidden"
+          className="flex-1 p-4 lg:p-6 pb-6 overflow-x-hidden"
         >
           {children}
         </motion.main>
-        {/* Mobile Bottom Navigation — visible on iOS and Android */}
-        <MobileNav />
       </div>
     </div>
   );

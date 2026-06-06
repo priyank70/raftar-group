@@ -3,9 +3,9 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Users, Plus, Edit2, Trash2, Shield, Phone, Mail, X, Crown, UserMinus } from 'lucide-react';
+import { Users, Plus, Edit2, Trash2, Shield, Phone, Mail, X, Crown, UserMinus, Trophy, Award, Coins } from 'lucide-react';
 import api from '@/lib/api';
-import { formatDate, getInitials } from '@/lib/utils';
+import { formatDate, getInitials, formatCurrency } from '@/lib/utils';
 import { useAuthStore } from '@/store/authStore';
 import toast from 'react-hot-toast';
 
@@ -285,10 +285,40 @@ export default function MembersPage() {
                       <Phone className="w-3 h-3" />{member.phone}
                     </span>
                   </div>
-                  <div className="flex items-center gap-2 mt-1.5">
+                  <div className="flex items-center gap-2 mt-1.5 flex-wrap">
                     <span className={`badge ${member.role === 'admin' ? 'badge-accent' : 'badge-gray'}`}>
                       {member.role === 'admin' ? '⭐ Admin' : 'Member'}
                     </span>
+                    
+                    {/* Rank Badge */}
+                    {member.rank !== undefined && (
+                      <span className={`badge font-semibold flex items-center gap-1 ${
+                        member.rank === 1 ? 'bg-amber-50 text-amber-800 border border-amber-200/60' :
+                        member.rank === 2 ? 'bg-slate-50 text-slate-800 border border-slate-200/60' :
+                        member.rank === 3 ? 'bg-orange-50 text-orange-800 border border-orange-200/60' :
+                        'badge-gray'
+                      }`}>
+                        {member.rank === 1 || member.rank === 2 || member.rank === 3 ? (
+                          <Trophy className={`w-3.5 h-3.5 ${
+                            member.rank === 1 ? 'text-amber-500' :
+                            member.rank === 2 ? 'text-slate-400' :
+                            'text-orange-400'
+                          }`} />
+                        ) : (
+                          <Award className="w-3.5 h-3.5 text-gray-400" />
+                        )}
+                        <span>Rank #{member.rank}</span>
+                      </span>
+                    )}
+
+                    {/* Money Invested Badge */}
+                    {member.totalPaid !== undefined && (
+                      <span className="badge bg-emerald-50 text-emerald-700 border border-emerald-100 font-medium flex items-center gap-1">
+                        <Coins className="w-3.5 h-3.5 text-emerald-500" />
+                        <span>Invested: {formatCurrency(member.totalPaid)}</span>
+                      </span>
+                    )}
+
                     {member.isDisabled && (
                       <span className="bg-red-50 text-red-600 border border-red-100/50 px-2 py-0.5 rounded-lg text-xs font-semibold flex items-center gap-1 animate-pulse">
                         🔒 Disabled
