@@ -340,7 +340,7 @@ function PaymentModal({ isOpen, onClose, group, pendingInstallments, hasPendingP
                             src={`${socketUrl}${group.qrCodeImage}`}
                             alt="Payment QR Code"
                             onClick={() => setIsQrExpanded(true)}
-                            className="w-44 h-44 object-contain rounded-2xl z-10 border-2 border-accent/30 cursor-zoom-in hover:scale-105 transition-transform"
+                            className="w-44 h-44 object-contain rounded-2xl z-10 border-2 relative border-accent/30 cursor-zoom-in hover:scale-105 transition-transform"
                             style={{ imageRendering: 'pixelated' }}
                           />
                         </div>
